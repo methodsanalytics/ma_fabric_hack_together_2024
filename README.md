@@ -17,6 +17,7 @@ We have created:
 - Notebooks to build the ML model and predictions
 - Power BI report to present the results
 
+
 --Design--
 
 -ETL-
@@ -37,8 +38,16 @@ We have created:
 
 3. ??
 
---Future Work—
+-Power BI Reporting-
+
+1. We used Microsoft Fabric to construct a fact and dimension-based data model.
+   
+2. We used PowerBI to visualise both the actual data and model's predictions data.
+
+
+--Future Work—-
 
 Due to time constraints, there were a number of avenues that were left unexplored. Below are a few ideas that we will be exploring in due course:
 
-- Incorporating a more robust prediction method by inputting rainfall predictions 
+- Incorporating a more robust prediction method by inputting rainfall predictions
+- Investigate usage of more data sources such as Tweets and further weather data
