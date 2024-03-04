@@ -60,5 +60,9 @@ We have created:
 
 Due to time constraints, there were a number of avenues that were left unexplored. Below are a few ideas that we will be exploring in due course:
 
-- Incorporating a more robust prediction method by inputting rainfall predictions
-- Investigate usage of more data sources such as Tweets and further weather data
+- Incorporate a more robust prediction method by inputting rainfall predictions, and potentially other regressors such as measures of how built up an area is, rainfall of upstream areas, how dry the ground is likely to be, and other factors that can impact flood risk.
+- Calculate potential area of the flood, and how that would impact road traffic and travel times to key destinations.
+- Introduce other data sources to enrich the information shown in the dashboard, such as links to news articles and images of ongoing floods.
+- Create a chatbot within Azure OpenAI to allow querying of the data in plain language with a RAG system.
+- Generate automatic alerts and reports to be triggered by a threshold level of risk tailored to each measurement station.
+
