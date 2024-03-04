@@ -30,6 +30,8 @@ We have created:
 
 --Design--
 
+![alt text](https://github.com/methodsanalytics/ma_fabric_hack_together_2024/blob/main/Flood%20Predictions%20Diagram.png)
+
 -ETL-
 
 1. We used pipelines to perform simple copies and to loop through values to call the EA APIs to copy to CSV and JSON files in the Lakehouse. 
