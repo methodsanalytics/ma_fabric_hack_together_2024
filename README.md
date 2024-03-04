@@ -73,7 +73,7 @@ Due to time constraints, there were a number of avenues that were left unexplore
 
 
 
-### Recreating the project
+## Recreating the project
 
 1. In a Fabric Workspace, create a Lakehouse and Warehouse
 2. To build the Warehouse tables and stored procedures run the DDL here DataStorage/Warehouse DDL.txt
