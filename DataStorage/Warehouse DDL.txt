@@ -1,0 +1,541 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[dim_calendar]
+(
+	[date_key] [int]  NULL,
+	[date] [date]  NULL,
+	[year] [int]  NULL,
+	[month] [int]  NULL,
+	[day] [int]  NULL,
+	[dayofweek] [int]  NULL,
+	[quarter] [int]  NULL,
+	[relative_date] [int]  NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[dim_flood_alert_type]
+(
+	[flood_alert_type_key] [int]  NOT NULL,
+	[alert_type] [varchar](8000)  NOT NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[dim_flood_area]
+(
+	[flood_area_key] [int]  NOT NULL,
+	[area_id] [varchar](8000)  NOT NULL,
+	[area_label] [varchar](8000)  NOT NULL,
+	[area_description] [varchar](8000)  NOT NULL,
+	[county] [varchar](8000)  NOT NULL,
+	[ea_area_name] [varchar](8000)  NOT NULL,
+	[river_or_sea] [varchar](8000)  NOT NULL,
+	[flood_watch_area] [varchar](8000)  NOT NULL,
+	[fwd_code] [varchar](8000)  NOT NULL,
+	[polygon] [varchar](8000)  NOT NULL,
+	[quick_dial_number] [varchar](8000)  NOT NULL,
+	[latitude] [decimal](20,15)  NOT NULL,
+	[longitude] [decimal](20,15)  NOT NULL,
+	[last_update_timestamp] [datetime2](6)  NOT NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[dim_flood_stations]
+(
+	[flood_station_key] [int]  NOT NULL,
+	[station_label] [varchar](1000)  NOT NULL,
+	[station_id] [varchar](1000)  NOT NULL,
+	[station_reference] [varchar](1000)  NOT NULL,
+	[river_name] [varchar](1000)  NOT NULL,
+	[rloi_id] [varchar](1000)  NOT NULL,
+	[catchment_name] [varchar](1000)  NOT NULL,
+	[date_opened] [varchar](1000)  NOT NULL,
+	[wiski_id] [varchar](1000)  NOT NULL,
+	[town] [varchar](1000)  NOT NULL,
+	[datum_offset] [varchar](1000)  NOT NULL,
+	[status] [varchar](1000)  NOT NULL,
+	[stage_scale] [varchar](1000)  NOT NULL,
+	[typical_range_high] [varchar](1000)  NOT NULL,
+	[typical_range_low] [varchar](1000)  NOT NULL,
+	[latitude] [varchar](1000)  NOT NULL,
+	[longitude] [varchar](1000)  NOT NULL,
+	[easting] [varchar](1000)  NOT NULL,
+	[northing] [varchar](1000)  NOT NULL,
+	[grid_reference] [varchar](1000)  NOT NULL,
+	[measures_list] [varchar](1000)  NOT NULL,
+	[parameter_name] [varchar](1000)  NOT NULL,
+	[parameter] [varchar](1000)  NOT NULL,
+	[qualifier] [varchar](1000)  NOT NULL,
+	[period] [varchar](1000)  NOT NULL,
+	[unit_name] [varchar](1000)  NOT NULL,
+	[last_update_timestamp] [datetime2](6)  NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[fact_flood_alert_history]
+(
+	[alert_date_key] [int]  NOT NULL,
+	[flood_area_key] [int]  NOT NULL,
+	[flood_alert_type_key] [int]  NOT NULL,
+	[flood_alery_count] [int]  NOT NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[fact_flood_readings]
+(
+	[date_key] [int]  NOT NULL,
+	[measure_key] [int]  NOT NULL,
+	[reading_timestamp] [datetime2](6)  NOT NULL,
+	[reading_value] [varchar](1000)  NOT NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[fact_flood_readings]
+(
+	[date_key] [int]  NOT NULL,
+	[measure_key] [int]  NOT NULL,
+	[reading_timestamp] [datetime2](6)  NOT NULL,
+	[reading_value] [varchar](1000)  NOT NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[stg_flood_alert_history]
+(
+	[alert_date] [varchar](1000)  NULL,
+	[flood_area] [varchar](1000)  NULL,
+	[area_id] [varchar](1000)  NULL,
+	[area_name] [varchar](1000)  NULL,
+	[alert_type] [varchar](1000)  NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[stg_flood_Area]
+(
+	[label] [varchar](8000)  NULL,
+	[description] [varchar](8000)  NULL,
+	[notation] [varchar](8000)  NULL,
+	[county] [varchar](8000)  NULL,
+	[eaAreaName] [varchar](8000)  NULL,
+	[eaRegionName] [varchar](8000)  NULL,
+	[riverOrSea] [varchar](8000)  NULL,
+	[floodWatchArea] [varchar](8000)  NULL,
+	[fwdCode] [varchar](8000)  NULL,
+	[polygon] [varchar](8000)  NULL,
+	[quickDialNumberWelsh] [varchar](8000)  NULL,
+	[quickDialNumber] [varchar](8000)  NULL,
+	[lat] [varchar](8000)  NULL,
+	[long] [varchar](8000)  NULL,
+	[trigger_time] [varchar](8000)  NULL
+)
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[stg_flood_measures]
+(
+	[label] [varchar](1000)  NULL,
+	[notation] [varchar](1000)  NULL,
+	[stationReference] [varchar](1000)  NULL,
+	[station] [varchar](1000)  NULL,
+	[parameterName] [varchar](1000)  NULL,
+	[parameter] [varchar](1000)  NULL,
+	[qualifier] [varchar](1000)  NULL,
+	[datumType] [varchar](1000)  NULL,
+	[period] [varchar](1000)  NULL,
+	[unit] [varchar](1000)  NULL,
+	[unitName] [varchar](1000)  NULL,
+	[valueType] [varchar](1000)  NULL,
+	[latestReading] [varchar](1000)  NULL,
+	[value] [varchar](1000)  NULL,
+	[dateTime] [varchar](1000)  NULL,
+	[date] [varchar](1000)  NULL,
+	[measure] [varchar](1000)  NULL,
+	[last_update_timestamp] [varchar](1000)  NULL
+)
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[stg_flood_readings]
+(
+	[flood_reading_timestamp] [varchar](1000)  NULL,
+	[flood_reading_measure_id] [varchar](1000)  NULL,
+	[flood_reading_value] [varchar](1000)  NULL
+)
+GO
+	
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[stg_flood_stations]
+(
+	[label] [varchar](1000)  NULL,
+	[notation] [varchar](1000)  NULL,
+	[stationReference] [varchar](1000)  NULL,
+	[riverName] [varchar](1000)  NULL,
+	[RLOIid] [varchar](1000)  NULL,
+	[catchmentName] [varchar](1000)  NULL,
+	[dateOpened] [varchar](1000)  NULL,
+	[wiskiID] [varchar](1000)  NULL,
+	[town] [varchar](1000)  NULL,
+	[datumOffset] [varchar](1000)  NULL,
+	[status] [varchar](1000)  NULL,
+	[stageScale] [varchar](1000)  NULL,
+	[typicalRangeHigh] [varchar](1000)  NULL,
+	[typicalRangeLow] [varchar](1000)  NULL,
+	[lat] [varchar](1000)  NULL,
+	[long] [varchar](1000)  NULL,
+	[easting] [varchar](1000)  NULL,
+	[northing] [varchar](1000)  NULL,
+	[gridReference] [varchar](1000)  NULL,
+	[measures] [varchar](1000)  NULL,
+	[parameterName] [varchar](1000)  NULL,
+	[parameter] [varchar](1000)  NULL,
+	[qualifier] [varchar](1000)  NULL,
+	[period] [varchar](1000)  NULL,
+	[unitName] [varchar](1000)  NULL,
+	[last_update_tc] [varchar](1000)  NULL
+)
+GO
+
+
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROC [dbo].[sp_dim_calendar]
+
+AS
+BEGIN
+
+delete from dbo.dim_calendar;
+-- Populate Calendar table with dates from 2016 to 2025
+DECLARE @StartDate date = '2006-01-01';
+DECLARE @EndDate date = '2025-12-31';
+DECLARE @CurrentDate date = @StartDate;
+
+WHILE @CurrentDate <= @EndDate
+BEGIN
+    INSERT INTO dbo.dim_calendar (date_key,date, year, month, day, dayofweek, quarter,relative_date)
+    VALUES (
+        CONVERT(int, FORMAT(@CurrentDate, 'yyyyMMdd')),
+        @CurrentDate,
+        YEAR(@CurrentDate),
+        MONTH(@CurrentDate),
+        DAY(@CurrentDate),
+        DATEPART(WEEKDAY, @CurrentDate),
+        DATEPART(QUARTER, @CurrentDate),
+        datediff(day,@startdate,@currentdate)
+    );
+
+    SET @CurrentDate = DATEADD(DAY, 1, @CurrentDate);
+END;
+END
+
+GO
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROC [dbo].[sp_dim_flood_alert_type]
+
+AS
+BEGIN
+
+DECLARE @max_key bigint;
+SET @max_key = (select max(flood_alert_type_key) from dbo.dim_flood_alert_type);
+
+insert into dbo.dim_flood_alert_type
+
+select distinct
+row_number() over (order by stg.alert_type asc) + case when @max_key is null then 0 else @max_key end as flood_alert_type_key,
+stg.alert_type
+from 
+(select distinct alert_type from WH_Fabric_AI.dbo.stg_flood_alert_history) stg 
+WHERE
+stg.alert_type is not null
+and not exists
+(select
+1
+from
+dbo.dim_flood_alert_type dim
+where 
+stg.alert_type = dim.alert_type
+)
+
+END
+
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE PROC [dbo].[sp_dim_flood_area]
+
+AS
+BEGIN
+DECLARE @max_key bigint;
+SET @max_key = (select max(flood_area_key) from dbo.dim_flood_area);
+
+insert into dbo.dim_flood_area
+
+select 
+row_number() over (order by stg.notation asc) + case when @max_key is null then 0 else @max_key end as flood_area_key
+,stg.notation
+,stg.label
+,stg.description
+,stg.county
+,stg.eaAreaName
+,isnull(stg.riverOrSea,'Unknown')
+,isnull(stg.floodWatchArea,'Unknown')
+,stg.fwdCode
+,stg.polygon
+,stg.quickDialNumber
+,stg.lat
+,stg.long
+,stg.trigger_time
+from 
+WH_Fabric_AI.dbo.stg_flood_Area stg 
+left join 
+dbo.dim_flood_area dim
+on (stg.notation = dim.area_id)
+where dim.area_id is null
+END
+
+
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROC [dbo].[sp_dim_flood_measures]
+
+AS
+BEGIN
+DECLARE @max_key bigint;
+SET @max_key = (select max(measure_key) from dbo.dim_flood_measures);
+
+insert into dbo.dim_flood_measures
+
+select
+row_number() over (order by stg.notation asc) + case when @max_key is null then 0 else @max_key end as flood_area_key
+,isnull(label,'Unknown')
+,isnull(notation,'Unknown')
+,isnull(stationReference,'Unknown')
+,isnull(station,'Unknown')
+,isnull(parameterName,'Unknown')
+,isnull(parameter,'Unknown')
+,isnull(qualifier,'Unknown')
+,isnull(datumType,'Unknown')
+,isnull(period,0)
+,isnull(unit,'Unknown')
+,isnull(unitName,'Unknown')
+,isnull(valueType,'Unknown')
+,isnull(latestReading,'Unknown')
+,isnull(value,'Unknown')
+,isnull(dateTime,'Unknown')
+,isnull(date,'Unknown')
+,isnull(measure,'Unknown')
+,isnull(last_update_timestamp,'Unknown')
+FROM WH_Fabric_AI.dbo.stg_flood_measures stg
+where 
+not exists
+(select
+1
+from
+dbo.dim_flood_measures dim
+where 
+stg.notation = dim.measure_id
+)
+END
+
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+
+
+CREATE PROC [dbo].[sp_dim_flood_stations]
+
+AS
+BEGIN
+DECLARE @max_key bigint;
+SET @max_key = (select max(flood_station_key) from dbo.dim_flood_stations);
+
+insert into dbo.dim_flood_stations
+
+select 
+row_number() over (order by stg.notation asc) + case when @max_key is null then 0 else @max_key end as flood_station_key
+,isnull(label,'Unknown')
+,isnull(notation,'Unknown')
+,isnull(stationReference,'Unknown')
+,isnull(riverName,'Unknown')
+,isnull(RLOIid,'Unknown')
+,isnull(catchmentName,'Unknown')
+,isnull(dateOpened,'Unknown')
+,isnull(wiskiID,'Unknown')
+,isnull(town,'Unknown')
+,isnull(datumOffset,'Unknown')
+,isnull(status,'Unknown')
+,isnull(stageScale,'Unknown')
+,isnull(typicalRangeHigh,'Unknown')
+,isnull(typicalRangeLow,'Unknown')
+,isnull(lat,0)
+,isnull(long,0)
+,isnull(easting,0)
+,isnull(northing,0)
+,isnull(gridReference,'Unknown')
+,isnull(measures,'Unknown')
+,isnull(parameterName,'Unknown')
+,isnull(parameter,'Unknown')
+,isnull(qualifier,'Unknown')
+,isnull(period,'Unknown')
+,isnull(unitName,'Unknown')
+,isnull(last_update_tc,'Unknown')
+FROM WH_Fabric_AI.dbo.stg_flood_stations stg
+where
+not exists
+(select
+1
+from
+dbo.dim_flood_stations dim
+where 
+stg.notation = dim.station_id
+)
+and stg.label <> 'Knightsford Bridge LVL'
+END
+
+
+
+
+
+GO
+
+
+	SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROC [dbo].[sp_fact_flood_alert_history]
+
+AS
+BEGIN
+insert into dbo.fact_flood_alert_history
+
+select 
+isnull(substring(alert_date,1,4)+substring(alert_date,6,2)+substring(alert_date,9,2),0) alert_date_key
+,isnull((select top 1 flood_area_key from dbo.dim_flood_area area where stg.area_id=area.area_id),0) flood_area_key
+,isnull((select top 1 flood_alert_type_key from dbo.dim_flood_alert_type type where stg.alert_type=type.alert_type),0) flood_alert_type_key
+,1 flood_alert_count
+from 
+dbo.stg_flood_alert_history stg
+END
+
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE PROC [dbo].[sp_fact_flood_readings]
+
+AS
+BEGIN
+insert into dbo.fact_flood_readings
+select 
+isnull(substring(flood_reading_timestamp,1,4)+substring(flood_reading_timestamp,6,2)+substring(flood_reading_timestamp,9,2),0) date_key
+,isnull((select top 1 measure_key from dbo.dim_flood_measures measures where stg.flood_reading_measure_id='http://environment.data.gov.uk/flood-monitoring/id/measures/'+measures.measure_id),0) measure_key
+,flood_reading_timestamp
+,isnull(stg.flood_reading_value,0)
+from 
+dbo.stg_flood_readings stg
+where flood_reading_timestamp > (select max(reading_timestamp) from dbo.fact_flood_readings)
+
+END
+
+
+GO
+
+
