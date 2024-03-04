@@ -71,3 +71,12 @@ Due to time constraints, there were a number of avenues that were left unexplore
 - Create a chatbot within Azure OpenAI to allow querying of the data in plain language with a RAG system.
 - Generate automatic alerts and reports to be triggered by a threshold level of risk tailored to each measurement station.
 
+
+
+### Recreating the project
+
+1. In a Fabric Workspace, create a Lakehouse and Warehouse
+2. To build the Warehouse tables and stored procedures run the DDL here DataStorage/Warehouse DDL.txt
+3. Create a HTTP connection named 'EA Flood Monitoring' pointing to http://environment.data.gov.uk/flood-monitoring/
+4. Create a HTTP conneciton named 'EA Flood Data' pointing to https://environment.data.gov.uk/flood-monitoring/id/
+5. Use the files in the 'Pipelines', 'Notebooks' and 'Reports' folders to create the objects in the workspace
