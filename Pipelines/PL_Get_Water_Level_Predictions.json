@@ -1,0 +1,384 @@
+{
+    "name": "PL_Get_Water_Level_Predictions",
+    "objectId": "a1b08767-88d5-4cf2-ab02-c393799659c3",
+    "properties": {
+        "activities": [
+            {
+                "name": "Copy_sbd",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "LakehouseReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        },
+                        "datasetSettings": {
+                            "annotations": [],
+                            "linkedService": {
+                                "name": "LH_Fabric_AI_Hack",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "Lakehouse",
+                                    "typeProperties": {
+                                        "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                        "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                        "rootFolder": "Files"
+                                    }
+                                }
+                            },
+                            "type": "DelimitedText",
+                            "typeProperties": {
+                                "location": {
+                                    "type": "LakehouseLocation",
+                                    "fileName": "water_level_predictions.csv"
+                                },
+                                "columnDelimiter": ",",
+                                "escapeChar": "\\",
+                                "firstRowAsHeader": true,
+                                "quoteChar": "\""
+                            },
+                            "schema": []
+                        }
+                    },
+                    "sink": {
+                        "type": "LakehouseTableSink",
+                        "tableActionOption": "Overwrite",
+                        "partitionOption": "None",
+                        "datasetSettings": {
+                            "annotations": [],
+                            "linkedService": {
+                                "name": "LH_Fabric_AI_Hack",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "Lakehouse",
+                                    "typeProperties": {
+                                        "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                        "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                        "rootFolder": "Tables"
+                                    }
+                                }
+                            },
+                            "type": "LakehouseTable",
+                            "schema": [
+                                {
+                                    "name": "ds",
+                                    "type": "timestamp"
+                                },
+                                {
+                                    "name": "trend",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "yhat_lower",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "yhat_upper",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "trend_lower",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "trend_upper",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "additive_terms",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "additive_terms_lower",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "additive_terms_upper",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "weekly",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "weekly_lower",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "weekly_upper",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "multiplicative_terms",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "multiplicative_terms_lower",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "multiplicative_terms_upper",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "yhat",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "flood_area_key",
+                                    "type": "integer"
+                                }
+                            ],
+                            "typeProperties": {
+                                "table": "water_level_predictions"
+                            }
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "mappings": [
+                            {
+                                "source": {
+                                    "name": "ds",
+                                    "type": "DateTime",
+                                    "physicalType": "date"
+                                },
+                                "sink": {
+                                    "name": "ds",
+                                    "physicalType": "timestamp"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "trend",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "trend",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "yhat_lower",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "yhat_lower",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "yhat_upper",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "yhat_upper",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "trend_lower",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "trend_lower",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "trend_upper",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "trend_upper",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "additive_terms",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "additive_terms",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "additive_terms_lower",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "additive_terms_lower",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "additive_terms_upper",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "additive_terms_upper",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "weekly",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "weekly",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "weekly_lower",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "weekly_lower",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "weekly_upper",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "weekly_upper",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "multiplicative_terms",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "multiplicative_terms",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "multiplicative_terms_lower",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "multiplicative_terms_lower",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "multiplicative_terms_upper",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "multiplicative_terms_upper",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "yhat",
+                                    "type": "Double",
+                                    "physicalType": "double"
+                                },
+                                "sink": {
+                                    "name": "yhat",
+                                    "physicalType": "double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "flood_area_key",
+                                    "type": "Int32",
+                                    "physicalType": "integer"
+                                },
+                                "sink": {
+                                    "name": "flood_area_key",
+                                    "physicalType": "string"
+                                }
+                            }
+                        ],
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Web1",
+                "type": "WebActivity",
+                "dependsOn": [
+                    {
+                        "activity": "Copy_sbd",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "method": "POST",
+                    "headers": {
+                        "Content-type": "application/json"
+                    },
+                    "body": "{\"email_address\":\"stuart.thompson@methods.co.uk\",\"subject\":\"Flood Predictions Ready\",\"body\":\"Flood predictions are ready\")"
+                },
+                "externalReferences": {
+                    "connection": "3d54bea3-40f9-4c9a-9928-b52e4f553ce8"
+                }
+            }
+        ],
+        "annotations": [],
+        "lastModifiedByObjectId": "93cebbab-d9b9-489a-b6d7-8dfd90c23135",
+        "lastPublishTime": "2024-03-04T11:47:36Z"
+    }
+}	

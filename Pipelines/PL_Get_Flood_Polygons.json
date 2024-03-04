@@ -1,0 +1,163 @@
+{
+    "name": "PL_Get_Flood_Polygons",
+    "objectId": "df77c3b3-3393-4417-b378-caed5363d4bd",
+    "properties": {
+        "activities": [
+            {
+                "name": "Get Flood Area IDs",
+                "type": "Lookup",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "LakehouseReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "firstRowOnly": false,
+                    "datasetSettings": {
+                        "annotations": [],
+                        "linkedService": {
+                            "name": "LH_Fabric_AI_Hack",
+                            "properties": {
+                                "annotations": [],
+                                "type": "Lakehouse",
+                                "typeProperties": {
+                                    "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                    "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                    "rootFolder": "Files"
+                                }
+                            }
+                        },
+                        "type": "DelimitedText",
+                        "typeProperties": {
+                            "location": {
+                                "type": "LakehouseLocation",
+                                "fileName": "flood_areas.csv",
+                                "folderPath": "flood_areas"
+                            },
+                            "columnDelimiter": ",",
+                            "escapeChar": "\\",
+                            "firstRowAsHeader": true,
+                            "quoteChar": "\""
+                        },
+                        "schema": []
+                    }
+                }
+            },
+            {
+                "name": "Loop Through Flood Areas",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "Get Flood Area IDs",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('Get Flood Area IDs').output.value",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "Get Flood Polygons",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "JsonSource",
+                                    "storeSettings": {
+                                        "type": "HttpReadSettings",
+                                        "requestMethod": "GET"
+                                    },
+                                    "formatSettings": {
+                                        "type": "JsonReadSettings"
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "type": "Json",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "HttpServerLocation",
+                                                "relativeUrl": {
+                                                    "value": "@concat('floodAreas/',item().notation,'/polygon.json')",
+                                                    "type": "Expression"
+                                                }
+                                            }
+                                        },
+                                        "schema": {},
+                                        "externalReferences": {
+                                            "connection": "e342fcb1-ee9d-4a6c-9377-649031b89251"
+                                        }
+                                    }
+                                },
+                                "sink": {
+                                    "type": "JsonSink",
+                                    "storeSettings": {
+                                        "type": "LakehouseWriteSettings"
+                                    },
+                                    "formatSettings": {
+                                        "type": "JsonWriteSettings"
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "linkedService": {
+                                            "name": "LH_Fabric_AI_Hack",
+                                            "properties": {
+                                                "annotations": [],
+                                                "type": "Lakehouse",
+                                                "typeProperties": {
+                                                    "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                                    "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                                    "rootFolder": "Files"
+                                                }
+                                            }
+                                        },
+                                        "type": "Json",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "LakehouseLocation",
+                                                "fileName": {
+                                                    "value": "@concat(item().notation,'.json')",
+                                                    "type": "Expression"
+                                                },
+                                                "folderPath": "flood_polygons"
+                                            }
+                                        },
+                                        "schema": {}
+                                    }
+                                },
+                                "enableStaging": false
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "annotations": [],
+        "lastModifiedByObjectId": "93cebbab-d9b9-489a-b6d7-8dfd90c23135",
+        "lastPublishTime": "2024-02-26T21:42:23Z"
+    }
+}

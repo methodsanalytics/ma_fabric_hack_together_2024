@@ -1,0 +1,182 @@
+{
+    "name": "PL_Get_Historic_Readings",
+    "objectId": "f77a76aa-e411-4a77-a553-a758ea99eb5b",
+    "properties": {
+        "activities": [
+            {
+                "name": "Get Historic Dates",
+                "type": "Lookup",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "LakehouseReadSettings",
+                            "recursive": false,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "firstRowOnly": false,
+                    "datasetSettings": {
+                        "annotations": [],
+                        "linkedService": {
+                            "name": "LH_Fabric_AI_Hack",
+                            "properties": {
+                                "annotations": [],
+                                "type": "Lakehouse",
+                                "typeProperties": {
+                                    "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                    "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                    "rootFolder": "Files"
+                                }
+                            }
+                        },
+                        "type": "DelimitedText",
+                        "typeProperties": {
+                            "location": {
+                                "type": "LakehouseLocation",
+                                "fileName": "historic_flood_reading_dates.csv",
+                                "folderPath": "flood_readings"
+                            },
+                            "columnDelimiter": ",",
+                            "escapeChar": "\\",
+                            "firstRowAsHeader": true,
+                            "quoteChar": "\""
+                        },
+                        "schema": []
+                    }
+                }
+            },
+            {
+                "name": "Loop Through Dates",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "Get Historic Dates",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('Get Historic Dates').output.value",
+                        "type": "Expression"
+                    },
+                    "batchCount": 20,
+                    "activities": [
+                        {
+                            "name": "Get Historic Readings",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "DelimitedTextSource",
+                                    "storeSettings": {
+                                        "type": "HttpReadSettings",
+                                        "requestMethod": "GET"
+                                    },
+                                    "formatSettings": {
+                                        "type": "DelimitedTextReadSettings"
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "type": "DelimitedText",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "HttpServerLocation",
+                                                "relativeUrl": {
+                                                    "value": "@concat('archive/readings-',item().reading_date,'.csv')",
+                                                    "type": "Expression"
+                                                }
+                                            },
+                                            "columnDelimiter": ",",
+                                            "escapeChar": "\\",
+                                            "firstRowAsHeader": true,
+                                            "quoteChar": "\""
+                                        },
+                                        "schema": [],
+                                        "externalReferences": {
+                                            "connection": "b12e24f8-e829-4ac4-be4e-53597e6b8858"
+                                        }
+                                    }
+                                },
+                                "sink": {
+                                    "type": "DelimitedTextSink",
+                                    "storeSettings": {
+                                        "type": "LakehouseWriteSettings"
+                                    },
+                                    "formatSettings": {
+                                        "type": "DelimitedTextWriteSettings",
+                                        "quoteAllText": true,
+                                        "fileExtension": ".txt"
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "linkedService": {
+                                            "name": "LH_Fabric_AI_Hack",
+                                            "properties": {
+                                                "annotations": [],
+                                                "type": "Lakehouse",
+                                                "typeProperties": {
+                                                    "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                                    "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                                    "rootFolder": "Files"
+                                                }
+                                            }
+                                        },
+                                        "type": "DelimitedText",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "LakehouseLocation",
+                                                "fileName": {
+                                                    "value": "@concat('flood_reading_historic',item().reading_date,'.csv')",
+                                                    "type": "Expression"
+                                                },
+                                                "folderPath": "flood_readings/flood_readings_complete"
+                                            },
+                                            "columnDelimiter": ",",
+                                            "escapeChar": "\\",
+                                            "firstRowAsHeader": true,
+                                            "quoteChar": "\""
+                                        },
+                                        "schema": []
+                                    }
+                                },
+                                "enableStaging": false,
+                                "translator": {
+                                    "type": "TabularTranslator",
+                                    "typeConversion": true,
+                                    "typeConversionSettings": {
+                                        "allowDataTruncation": true,
+                                        "treatBooleanAsNumber": false
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "annotations": [],
+        "lastModifiedByObjectId": "93cebbab-d9b9-489a-b6d7-8dfd90c23135",
+        "lastPublishTime": "2024-03-02T21:54:26Z"
+    }
+}

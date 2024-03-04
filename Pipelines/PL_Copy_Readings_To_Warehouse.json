@@ -1,0 +1,174 @@
+{
+    "name": "PL_Copy_Readings_To_Warehouse",
+    "objectId": "379775a9-bed2-4734-bda5-afc9247b87d7",
+    "properties": {
+        "activities": [
+            {
+                "name": "Copy flood readings to warehouse",
+                "description": "Copies flood reading files from the Lakehouse to staging tables in the Warehouse",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "LakehouseReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        },
+                        "datasetSettings": {
+                            "annotations": [],
+                            "linkedService": {
+                                "name": "LH_Fabric_AI_Hack",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "Lakehouse",
+                                    "typeProperties": {
+                                        "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                        "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                        "rootFolder": "Files"
+                                    }
+                                }
+                            },
+                            "type": "DelimitedText",
+                            "typeProperties": {
+                                "location": {
+                                    "type": "LakehouseLocation",
+                                    "fileName": "yesterdays_readings.csv",
+                                    "folderPath": "flood_readings"
+                                },
+                                "columnDelimiter": ",",
+                                "escapeChar": "\\",
+                                "firstRowAsHeader": true,
+                                "quoteChar": "\""
+                            },
+                            "schema": []
+                        }
+                    },
+                    "sink": {
+                        "type": "DataWarehouseSink",
+                        "preCopyScript": "delete from dbo.stg_flood_readings",
+                        "allowCopyCommand": true,
+                        "disableMetricsCollection": false,
+                        "datasetSettings": {
+                            "annotations": [],
+                            "linkedService": {
+                                "name": "WH_Fabric_AI",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "DataWarehouse",
+                                    "typeProperties": {
+                                        "endpoint": "ilznlg3swkruzaofauafc2lzzu-iksag4a2zi3e5hmo7ep7p6ax7y.datawarehouse.fabric.microsoft.com",
+                                        "artifactId": "7a584613-5131-4240-bf0e-b09c586a6a8b"
+                                    }
+                                }
+                            },
+                            "type": "DataWarehouseTable",
+                            "schema": [],
+                            "typeProperties": {
+                                "schema": "dbo",
+                                "table": "stg_flood_readings"
+                            }
+                        }
+                    },
+                    "enableStaging": true,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "mappings": [
+                            {
+                                "source": {
+                                    "name": "dateTime",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "flood_reading_timestamp",
+                                    "type": "String",
+                                    "physicalType": "nvarchar"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "measure",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "flood_reading_measure_id",
+                                    "type": "String",
+                                    "physicalType": "nvarchar"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "value",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "flood_reading_value",
+                                    "type": "String",
+                                    "physicalType": "nvarchar"
+                                }
+                            }
+                        ],
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Build Flood Readings Fact Table",
+                "description": "Adds new data from dbo.stg_flood_readings to dbo.fact_flood_Readings",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Copy flood readings to warehouse",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[sp_fact_flood_readings]"
+                },
+                "linkedService": {
+                    "name": "WH_Fabric_AI",
+                    "objectId": "7a584613-5131-4240-bf0e-b09c586a6a8b",
+                    "properties": {
+                        "annotations": [],
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                            "endpoint": "ilznlg3swkruzaofauafc2lzzu-iksag4a2zi3e5hmo7ep7p6ax7y.datawarehouse.fabric.microsoft.com",
+                            "artifactId": "7a584613-5131-4240-bf0e-b09c586a6a8b"
+                        },
+                        "tridentArtifactType": "DataWarehouse"
+                    }
+                }
+            }
+        ],
+        "annotations": [],
+        "lastModifiedByObjectId": "93cebbab-d9b9-489a-b6d7-8dfd90c23135",
+        "lastPublishTime": "2024-03-02T21:46:36Z"
+    }
+}

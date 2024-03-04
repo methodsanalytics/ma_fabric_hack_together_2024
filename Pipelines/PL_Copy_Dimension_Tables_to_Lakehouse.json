@@ -1,0 +1,100 @@
+{
+    "name": "PL_Copy_Dimension_Tables_to_Lakehouse",
+    "objectId": "78dc0aa0-e66c-45ea-a846-841ed036ba75",
+    "properties": {
+        "activities": [
+            {
+                "name": "Copy Dimension tables to Lakehouse",
+                "description": "Ad-Hoc pipeline to copy tables from Warehouse to Lakehouse. Amend the source and destination",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DataWarehouseSource",
+                        "sqlReaderQuery": "SELECT *\nFROM [WH_Fabric_AI].[dbo].[vw_ml_training_flood_short]",
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None",
+                        "datasetSettings": {
+                            "annotations": [],
+                            "linkedService": {
+                                "name": "WH_Fabric_AI",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "DataWarehouse",
+                                    "typeProperties": {
+                                        "endpoint": "ilznlg3swkruzaofauafc2lzzu-iksag4a2zi3e5hmo7ep7p6ax7y.datawarehouse.fabric.microsoft.com",
+                                        "artifactId": "7a584613-5131-4240-bf0e-b09c586a6a8b"
+                                    }
+                                }
+                            },
+                            "type": "DataWarehouseTable",
+                            "schema": [],
+                            "typeProperties": {
+                                "schema": "dbo",
+                                "table": "fact_flood_readings"
+                            }
+                        }
+                    },
+                    "sink": {
+                        "type": "DelimitedTextSink",
+                        "storeSettings": {
+                            "type": "LakehouseWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextWriteSettings",
+                            "quoteAllText": true,
+                            "fileExtension": ".txt"
+                        },
+                        "datasetSettings": {
+                            "annotations": [],
+                            "linkedService": {
+                                "name": "LH_Fabric_AI_Hack",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "Lakehouse",
+                                    "typeProperties": {
+                                        "workspaceId": "7003a442-ca1a-4e36-9d8e-f91ff7f817fe",
+                                        "artifactId": "9ff8b2a2-92fb-489f-9a14-42c5c04b70be",
+                                        "rootFolder": "Files"
+                                    }
+                                }
+                            },
+                            "type": "DelimitedText",
+                            "typeProperties": {
+                                "location": {
+                                    "type": "LakehouseLocation",
+                                    "fileName": "vw_ml_training_flood_short.csv",
+                                    "folderPath": "dim_fact_copies"
+                                },
+                                "columnDelimiter": ",",
+                                "escapeChar": "\\",
+                                "firstRowAsHeader": true,
+                                "quoteChar": "\""
+                            },
+                            "schema": []
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                }
+            }
+        ],
+        "annotations": [],
+        "lastModifiedByObjectId": "93cebbab-d9b9-489a-b6d7-8dfd90c23135",
+        "lastPublishTime": "2024-03-02T21:02:35Z"
+    }
+}
