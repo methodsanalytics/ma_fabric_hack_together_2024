@@ -1,3 +1,13 @@
+--MS Fabric Flood Predictions--
+
+This is the repository for our team's entry to Fabric Hacktogether 2024.
+
+Team members are:
+- Lilith Barca
+- Peter Cooke
+- Stuart Thompson
+
+
 --Introduction--
 
 For many people across the world, risk of flooding is a yearly concern, impacting both home life and work life when roads become blocked off and streets are flooded. Floods are a growing problem, with climate change and a reduction in green space increasing the risk of extreme weather events and water runoff.
