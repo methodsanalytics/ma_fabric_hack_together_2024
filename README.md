@@ -55,6 +55,11 @@ We have created:
    
 2. We used PowerBI to visualise both the actual data and model's predictions data.
 
+### Power Automate flow
+
+1. We used Microsoft Power Automate to build a flow to send emails when the pipelines run
+   
+2. We used Copilot to help build the flow and have added a screenshot of the Copilot responses to the repository
 
 ### Future Work
 
