@@ -36,7 +36,6 @@ We have created:
 
 2. The notebook can be scheduled to rerun with refreshed water level data.
 
-3. ??
 
 -Power BI Reporting-
 
